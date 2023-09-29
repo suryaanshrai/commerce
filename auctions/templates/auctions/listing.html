@@ -1,0 +1,92 @@
+{% extends 'auctions/layout.html' %}
+
+{% block title %}
+    {{ listing.title }}
+{% endblock %}
+
+{% block body %}
+    <center><h2>{{listing.title}}</h2></center>
+
+    <div style="border:1px solid #A9A9A9; padding: 3px">
+        <h4>Description</h4>
+        <p>{{listing.description}}</p>
+    </div>
+        <div style="display:grid; grid-template-columns:50% 50%">
+            <div>
+                {% if listing.close_status == False %}
+                    <p>Current Price: Rs. {{listing.current_bid}}</p>
+                    {% if highest_bidder %}
+                        <p>Highest Bidder: {{highest_bidder}}</p>
+                    {% endif %}
+                {% else %}
+                    {% if highest_bidder == user.username %}
+                        <h3>Congratulations! You've won the auction!</h3>
+                    {% else %}
+                        <p>Sold at Rs. {{listing.current_bid}} to {{highest_bidder}}</p>
+                    {% endif %}
+                {% endif %}
+
+                    {% if listing.category %}
+                        <p>Category: {{listing.category}}</p>
+                    {% endif %}
+
+                    <p><strong>Listed By:</strong> {{listing.creator}}</p>
+                </div>
+            <div style="text-align:right; padding: 3px; margin:3px">
+                {% if listing.creator == user and listing.close_status == False %}
+                <form action="{% url 'close_listing' %}" method="post">
+                    {% csrf_token %}
+                    <button class="btn btn-primary" style="margin:5px" type="submit">Close listing</button>
+                    <input type="text" value="{{listing.id}}" hidden name="listid">
+                </form>
+                {% endif %}
+
+                {% if user.is_authenticated and listing.close_status == False and listing.creator != user%}
+                    <form action="{% url 'placeBid' %}" method="post">
+                        {% csrf_token %}
+                        <input type="number" min="{{listing.current_bid|add:'1'}}" name="price">
+                        <input type="text" value="{{listing.id}}" hidden name="listid">
+                        <button class="btn btn-primary" type="submit">Place Bid</button>
+                    </form>
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                    {% if watchlistStatus %}
+                        <form action="{% url 'addToWatchlist' %}" method="post">
+                            {% csrf_token %}
+                            <input type="text" value="delete" hidden name="action">
+                            <input type="text" value="{{listing.id}}" hidden name="listid">
+                            <button class="btn btn-primary" type="submit">Delete from watch list</button>
+                        </form>
+                    {% else %}
+                        <form action="{% url 'addToWatchlist' %}" method="post">
+                            {% csrf_token %}
+                            <input type="text" value="add" hidden name="action">
+                            <input type="text" value="{{listing.id}}" hidden name="listid">
+                            <button class="btn btn-primary" type="submit">Add to watch list</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+            </div>
+    </div>
+
+    {% if listing.image %}
+        <img src="{{listing.image}}" style="max-width:40%; max-height:auto">
+    {% endif %}
+    <hr style="margin-bottom:5px">
+    {% if user.is_authenticated %}
+        <form action="{% url 'add_comment' %}" method="post">
+            {% csrf_token %}
+            <input value="{{listing.id}}" hidden name="listid">
+            <p><textarea maxlength="256" placeholder="Add a comment" name="comment" style="height:3cm;width:50%"></textarea></p>
+            <input class="btn btn-primary" type="submit" value="Comment">
+        </form>
+    {% endif %}
+
+    {% for comment in comments %}
+        <div class="textBox">
+            <h5>{{comment.user}}</h5>
+            <p>{{comment.comment}}</p>
+        </div>
+    {% endfor %}
+{% endblock %}

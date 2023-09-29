@@ -1,0 +1,33 @@
+{% extends 'auctions/layout.html' %}
+
+{% block title %}
+    Category: {{category}}
+{% endblock %}
+
+{% block body %}
+    <h2>{{category}}</h2>
+    <div class="results">
+    {% for listing in category_items %}
+    {% if listing.close_status == False %}
+    <div class="textBox">
+        <a href="{% url 'listing_page' listing.id %}"><h3>{{ listing.title }}</h3></a>
+        <p>{{ listing.description }} </p>
+        <h4>Current Price = Rs. {{ listing.current_bid }} </h4>
+
+        {% if listing.image %}
+            <img src="{{listing.image}}" style="width:40%;height:auto">
+        {% endif %}
+
+        {% if listing.category %}
+            <p>Category : {{ listing.category }}</p>
+        {% endif %}
+    </div>
+    {% endif %}
+    {% endfor %}
+    </div>
+{% endblock %}
+{% for listing in listings %}
+    <div class="textBox">
+
+    </div>
+    {% endfor %}

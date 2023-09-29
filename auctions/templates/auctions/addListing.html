@@ -1,0 +1,12 @@
+{% extends 'auctions/layout.html' %}
+{% block body %}
+    <form action="{% url 'add_listing' %}" method="post">
+        {% csrf_token %}
+        <div class="myGrid">
+            {{ form }}
+        </div>
+        <div>
+            <center><button action="submit" class="btn btn-primary">Add Listing</button></center>
+        </div>
+    </form>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'auctions/layout.html' %}
+{% block title %}
+    Your Watchlist
+{% endblock %}
+{% block body %}
+    <h2>Your Watchlist</h2>
+    <div class="results">
+    {% for listing in watchlist %}
+    <div class="textBox">
+        <a href="{% url 'listing_page' listing.item.id %}"><h3>{{ listing.item.title }}</h3></a>
+        <p>{{ listing.item.description }} </p>
+        <h4>Current Price = Rs. {{ listing.item.current_bid }} </h4>
+
+        {% if listing.item.image %}
+            <img src="{{listing.item.image}}" style="width:40%;height:auto">
+        {% endif %}
+
+        {% if listing.item.category %}
+            <p>Category : {{ listing.item.category }}</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+    </div>
+{% endblock %}
