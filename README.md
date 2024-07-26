@@ -1,7 +1,7 @@
 # commerce
 An eBay-like e-commerce auction site that will allow users to post auction listings, place bids on listings, comment on those listings, and add listings to a “watchlist.”
 
-Video: https://youtu.be/l0whM4H4hho
+Video: [https://youtu.be/l0whM4H4hho](https://www.youtube.com/watch?v=LpWnMFKcHLY)
 
 
 ## Running the application
